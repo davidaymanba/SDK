@@ -37,7 +37,7 @@ async function start() {
   await connectDatabase();
   await sequelize.sync();
   await seedDatabase();
-  app.listen(port, "127.0.0.1", () => {
+  app.listen(port, "0.0.0.0", () => {
     console.log(`DK Motorsport API: http://127.0.0.1:${port}`);
   });
 }

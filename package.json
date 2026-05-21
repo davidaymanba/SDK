@@ -7,6 +7,7 @@
     "dev": "vite --host 127.0.0.1",
     "backend": "node server/index.js",
     "dev:backend": "node server/index.js",
+    "start": "node server/index.js",
     "build": "vite build",
     "test:crud": "node scripts/test-crud.mjs",
     "preview": "vite preview --host 127.0.0.1",
