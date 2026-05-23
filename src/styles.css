@@ -37,6 +37,46 @@ body {
   font-family: var(--default-font-family, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji");
 }
 
+html,
+body,
+#root {
+  transition: background-color 260ms ease, color 260ms ease, filter 260ms ease;
+}
+
+html[data-theme="light"] {
+  background: #f2f4f7;
+}
+
+html[data-theme="light"] body {
+  background:
+    linear-gradient(90deg, rgba(10, 10, 10, 0.045) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(10, 10, 10, 0.03) 1px, transparent 1px),
+    #f2f4f7;
+  background-size: 64px 64px;
+  color: #131313;
+}
+
+html[data-theme="light"] #root {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+html[data-theme="light"] img,
+html[data-theme="light"] video,
+html[data-theme="light"] canvas {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+html[data-theme="light"] .theme-toggle-icon,
+html[data-theme="light"] .theme-toggle-label {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+html[data-theme="light"] .theme-toggle {
+  background: rgba(255, 255, 255, 0.88);
+  border-color: rgba(20, 20, 20, 0.2);
+  color: #111;
+}
+
 a,
 button {
   cursor: auto;

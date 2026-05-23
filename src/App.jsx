@@ -3,7 +3,7 @@ import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
-import { ArrowDown, ArrowLeft, Building2, Check, ChevronLeft, Film, Flame, Gauge, Globe2, Instagram, Mail, MapPin, Menu, Phone, Send, Smartphone, Trophy, Users, Wrench, X, Zap, ZoomIn } from "lucide-react";
+import { ArrowDown, ArrowLeft, Building2, Check, ChevronLeft, Film, Flame, Gauge, Globe2, Instagram, Mail, MapPin, Menu, Moon, Phone, Send, Smartphone, Sun, Trophy, Users, Wrench, X, Zap, ZoomIn } from "lucide-react";
 import { Link, NavLink, Route, Routes, useLocation } from "react-router-dom";
 import AdminDashboard from "./AdminDashboard.jsx";
 import { useContentStore } from "./contentStore";
@@ -319,18 +319,34 @@ function useCountUp(value, margin = "-70px", duration = 1.35) {
 function App() {
   const location = useLocation();
   const loadContent = useContentStore((state) => state.loadContent);
+  const [theme, setTheme] = useState(() => {
+    if (typeof window === "undefined") return "dark";
+    const savedTheme = window.localStorage.getItem("sdk-theme");
+    if (savedTheme === "dark" || savedTheme === "light") return savedTheme;
+    return window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  });
 
   useEffect(() => {
     loadContent().catch((error) => console.error("Failed to load content", error));
   }, [loadContent]);
 
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+    document.documentElement.style.colorScheme = theme;
+    window.localStorage.setItem("sdk-theme", theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme((current) => (current === "dark" ? "light" : "dark"));
+  };
+
   if (location.pathname.startsWith("/admin")) {
     return <AdminDashboard />;
   }
-  return <PublicSite />;
+  return <PublicSite theme={theme} onToggleTheme={toggleTheme} />;
 }
 
-function PublicSite() {
+function PublicSite({ theme, onToggleTheme }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
@@ -384,6 +400,7 @@ function PublicSite() {
       <Particles />
       <Navbar scrolled={scrolled} menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
       <MobileMenu open={menuOpen} setOpen={setMenuOpen} />
+      <ThemeToggle theme={theme} onToggleTheme={onToggleTheme} />
 
       <ScrollToTop />
 
@@ -402,6 +419,23 @@ function PublicSite() {
 
       <Footer />
     </main>
+  );
+}
+
+function ThemeToggle({ theme, onToggleTheme }) {
+  const isLight = theme === "light";
+
+  return (
+    <button
+      type="button"
+      className="theme-toggle fixed bottom-6 left-6 z-[70] inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/70 px-4 py-3 text-sm font-bold text-white backdrop-blur-md transition hover:border-accent-red hover:shadow-neon"
+      onClick={onToggleTheme}
+      aria-label={isLight ? "تفعيل الوضع الداكن" : "تفعيل الوضع الفاتح"}
+      title={isLight ? "Dark" : "Light"}
+    >
+      {isLight ? <Moon className="theme-toggle-icon h-5 w-5" /> : <Sun className="theme-toggle-icon h-5 w-5" />}
+      <span className="theme-toggle-label">{isLight ? "Dark" : "Light"}</span>
+    </button>
   );
 }
 
